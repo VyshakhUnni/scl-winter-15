@@ -1,14 +1,8 @@
-function result = euler(f, y0, dt, t_end)
-result = y0;
-y_n = y0;
-
-% Number of steps
-N = t_end / dt;
-
-for n = 0 : N - 1
-    y_n1 = f(y_n) * dt + y_n;
-    result = [ result, y_n1 ];
-    y_n = y_n1
+function y = euler(func, y0, dt, t_end) %name clash
+n = t_end / dt; % number of steps
+y = zeros(1,n); % prealloc results array
+y(1) = y0; % set first element
+for i = 1:n-1, % t is confusing rename
+    y(i+1) = y(i) + dt * func(y(i));
 end
-
 end
