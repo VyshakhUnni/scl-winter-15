@@ -42,6 +42,7 @@ function main
         column3 = [dt(3); Error3; ErRedFact3; ApproxError3];
         column4 = [dt(4); Error4; ErRedFact4; ApproxError4];
 
+        fprintf('%s method', methodName)
         table(column1, column2, column3, column4, 'RowNames', {'dt'; 'error'; 'error red.'; 'error app.'})
 
         figure('Name', methodName, 'NumberTitle', 'off');
