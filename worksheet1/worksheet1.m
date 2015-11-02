@@ -5,11 +5,17 @@ function main
     t = linspace(0, t_end, 1000); % analytical t
     p = Analytical(t); % analytical p    
 
-    p5 = Analytical(linspace(0,t_end,6));
-    p10 = Analytical(linspace(0,t_end,11));
-    p20 = Analytical(linspace(0,t_end,21));
-    p40 = Analytical(linspace(0,t_end,41));
-    p80 = Analytical(linspace(0,t_end,81));
+    t1 = linspace(0,t_end,6);
+    t2 = linspace(0,t_end,11);
+    t3 = linspace(0,t_end,21);
+    t4 = linspace(0,t_end,41);
+    t5 = linspace(0,t_end,81);
+    
+    p1 = Analytical(t1);
+    p2 = Analytical(t2);
+    p3 = Analytical(t3);
+    p4 = Analytical(t4);
+    p5 = Analytical(t5);
 
     dt = [1 0.5 0.25 0.125 0.0625];
     
@@ -21,11 +27,11 @@ function main
         results5 = method(func, y0, dt(5), t_end);
         
         % Error using exact (analytical) solution
-        Error1 = Error(results1, p5, dt(1));
-        Error2 = Error(results2, p10, dt(2));
-        Error3 = Error(results3, p20, dt(3));
-        Error4 = Error(results4, p40, dt(4));
-        Error5 = Error(results5, p80, dt(5));
+        Error1 = Error(results1, p1, dt(1));
+        Error2 = Error(results2, p2, dt(2));
+        Error3 = Error(results3, p3, dt(3));
+        Error4 = Error(results4, p4, dt(4));
+        Error5 = Error(results5, p5, dt(5));
         
         ErRedFact1 = Error1 / Error2;
         ErRedFact2 = Error2 / Error3;
@@ -33,10 +39,10 @@ function main
         ErRedFact4 = Error4 / Error5;
 
         % Error using the best approximation
-        ApproxError1 = Error(results1, results5(1:16:81), dt(1));
-        ApproxError2 = Error(results2, results5(1:8:81), dt(2));
-        ApproxError3 = Error(results3, results5(1:4:81), dt(3));
-        ApproxError4 = Error(results4, results5(1:2:81), dt(4));
+        ApproxError1 = Error(results1, results4(1:8:41), dt(1));
+        ApproxError2 = Error(results2, results4(1:4:41), dt(2));
+        ApproxError3 = Error(results3, results4(1:2:41), dt(3));
+        ApproxError4 = Error(results4, results4, dt(4));
 
         % Result table
         column1 = [dt(1); Error1; ErRedFact1; ApproxError1];
@@ -50,10 +56,10 @@ function main
         figure('Name', methodName, 'NumberTitle', 'off');
         hold on; % don't overwrite previous plots
         plot(t, p);
-        plot(linspace(0, 5, 6), results1);
-        plot(linspace(0, 5, 11), results2);
-        plot(linspace(0, 5, 21), results3);
-        plot(linspace(0, 5, 41), results4);
+        plot(t1, results1);
+        plot(t2, results2);
+        plot(t3, results3);
+        plot(t4, results4);
 
         legend('analytical', 'dt = 1', 'dt = 1/2', 'dt = 1/4', 'dt = 1/8', 'Location', 'northwest');
         xlabel('time step t');
