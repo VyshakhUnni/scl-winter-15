@@ -1,3 +1,3 @@
-function error = Error(approximations, analytical, dt)
-error = sqrt(dt * 0.2 * sum((approximations - analytical).^2));
+function error = Error(approximations, ideal, dt)
+error = sqrt(dt * .2 * sum((approximations - ideal).^2));
 end
