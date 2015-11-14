@@ -1,4 +1,4 @@
-function result = implicit_adams_lin2(f, df, y0, dt, t_end)
+function result = iAdams_lin2(f, df, y0, dt, t_end)
 
 % number of steps
 n = t_end / dt;

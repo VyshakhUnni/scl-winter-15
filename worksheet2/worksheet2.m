@@ -27,21 +27,16 @@ p5 = y(t5);
 p6 = y(t6);
 p7 = y(t7);
 
-    function processExplicitMethod (methodName, method)
-        results1 = method(func, y0, dt(1), t_end);
-        results2 = method(func, y0, dt(2), t_end);
-        results3 = method(func, y0, dt(3), t_end);
-        results4 = method(func, y0, dt(4), t_end);
-        results5 = method(func, y0, dt(5), t_end);
-        results6 = method(func, y0, dt(6), t_end);
-        
-        % plots the solutions in one graph with the exact solution
+    function processResults(methodName, results1, results2, results3, results4, results5, results6, results7)
+  
+        % plot the solutions in one graph with the exact solution
         figure('Name', methodName, 'NumberTitle', 'off');
         hold on; % don't overwrite previous plots
         
         % exact solution
         plot(t, p);
-        
+  
+        % our solutions
         plot(t1, results1);
         plot(t2, results2);
         plot(t3, results3);
@@ -49,6 +44,7 @@ p7 = y(t7);
         plot(t5, results5);
         plot(t6, results6);
         
+        % plot properties
         ylim([0 20])
         legend('analytical', 'dt = 1', 'dt = 1/2', 'dt = 1/4', 'dt = 1/8', 'dt = 1/16', 'dt = 1/32', 'Location', 'northeast');
         xlabel('time step t');
@@ -57,42 +53,8 @@ p7 = y(t7);
         
         hold off;
         shg;
-    end
-
-    function processImplicitMethod(methodName, method)
-        % Process implicit method
         
-        % count the solutions for different time steps
-        results2 = method(func, df, y0, dt(2), t_end);
-        results3 = method(func, df, y0, dt(3), t_end);
-        results4 = method(func, df, y0, dt(4), t_end);
-        results5 = method(func, df, y0, dt(5), t_end);
-        results6 = method(func, df, y0, dt(6), t_end);
-        results7 = method(func, df, y0, dt(7), t_end);
- 
-        % plots the solutions in one graph with the exact solution
-        figure('Name', methodName, 'NumberTitle', 'off');
-        hold on; % don't overwrite previous plots
-        
-        % exact solution
-        plot(t, p);
-        
-        plot(t2, results2);
-        plot(t3, results3);
-        plot(t4, results4);
-        plot(t5, results5);
-        plot(t6, results6);
-        
-        ylim([0 20])
-        legend('analytical', 'dt = 1/2', 'dt = 1/4', 'dt = 1/8', 'dt = 1/16', 'dt = 1/32', 'Location', 'northeast');
-        xlabel('time step t');
-        ylabel('solution');
-        title(methodName);
-        
-        hold off;
-        shg;
-        
-        % Error using exact (analytical) solution
+        % Errors while comparing with exact (analytical) solution
         Error2 = Error(results2, p2, dt(2));
         Error3 = Error(results3, p3, dt(3));
         Error4 = Error(results4, p4, dt(4));
@@ -100,6 +62,7 @@ p7 = y(t7);
         Error6 = Error(results6, p6, dt(6));
         Error7 = Error(results7, p7, dt(7));
         
+        % The factor by which the error are reduced if step size is halved
         ErRedFact2 = Error2 / Error3;
         ErRedFact3 = Error3 / Error4;
         ErRedFact4 = Error4 / Error5;
@@ -115,13 +78,41 @@ p7 = y(t7);
 
         fprintf('%s method', methodName)
         table(column2, column3, column4, column5, column6, 'RowNames', {'dt'; 'error'; 'error red. factor'})
-
     end
 
-processExplicitMethod('Euler', @euler);
+    function processImplicitMethod(methodName, method)
+        
+        % count the solutions for different time steps
+        results1 = method(func, df, y0, dt(1), t_end);
+        results2 = method(func, df, y0, dt(2), t_end);
+        results3 = method(func, df, y0, dt(3), t_end);
+        results4 = method(func, df, y0, dt(4), t_end);
+        results5 = method(func, df, y0, dt(5), t_end);
+        results6 = method(func, df, y0, dt(6), t_end);
+        results7 = method(func, df, y0, dt(7), t_end);
+        
+        processResults(methodName, results1, results2, results3, results4, results5, results6, results7);
+    end
+
+    function processExplicitMethod(methodName, method)
+        
+        % count the solutions for different time steps
+        results1 = method(func, y0, dt(1), t_end);
+        results2 = method(func, y0, dt(2), t_end);
+        results3 = method(func, y0, dt(3), t_end);
+        results4 = method(func, y0, dt(4), t_end);
+        results5 = method(func, y0, dt(5), t_end);
+        results6 = method(func, y0, dt(6), t_end);
+        results7 = method(func, y0, dt(7), t_end);
+        
+        processResults(methodName, results1, results2, results3, results4, results5, results6, results7);
+    end
+
+processExplicitMethod('Explicit Euler', @euler);
+processExplicitMethod('Heun', @heun);
 
 processImplicitMethod('Implicit Euler', @iEuler);
 processImplicitMethod('Adams-Moulton', @iAdams);
-processImplicitMethod('Adams-Voulton Lineriazation 1', @iAdams_lin1);
+processImplicitMethod('Adams-Moulton Lineriazation 1', @iAdams_lin1);
 processImplicitMethod('Adams-Moulton Lineriazation 2', @iAdams_lin2);
 end
