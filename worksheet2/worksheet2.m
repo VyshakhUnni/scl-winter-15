@@ -114,7 +114,7 @@ p7 = y(t7);
         column6 = [dt(6); Error6; ErRedFact6];
 
         fprintf('%s method', methodName)
-        table(column2, column3, column4, column5, column6, 'RowNames', {'dt'; 'error'; 'error red.'})
+        table(column2, column3, column4, column5, column6, 'RowNames', {'dt'; 'error'; 'error red. factor'})
 
     end
 

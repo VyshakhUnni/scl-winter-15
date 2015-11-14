@@ -9,6 +9,6 @@ for i = 1:n
     yn = result(i);
     nextStepEquation = @(y)(y - yn - dt * .5 * (7 * (1 - yn / 10) * yn + 7 * (1 - yn / 10) * y));
     nextStepDerivative = @(y)(1 + dt * .5 * 7 * yn / 10);
-    result(i + 1) = newton(nextStepEquation, nextStepDerivative, result(i), dt, 1.e-4, 0, 100);
+    result(i + 1) = newton(nextStepEquation, nextStepDerivative, result(i));
 end
 end

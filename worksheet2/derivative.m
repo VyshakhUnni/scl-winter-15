@@ -1,3 +1,3 @@
 function df = derivative (t)
-df = -7 * (1 + t / 5);
+df = 7 * (1 - t / 5);
 end
