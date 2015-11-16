@@ -7,6 +7,7 @@ df = @derivative;
 y0 = 20;
 t_end = 5;
 dt = [1 .5 .25 .125 .0625 .03125 .015625];
+stabilityCriterion = 0.1;
 
 % number of nodes = number of intervals + 1
 t1 = linspace(0, t_end, t_end / dt(1) + 1);
@@ -62,6 +63,12 @@ p7 = y(t7);
         Error6 = Error(results6, p6, dt(6));
         Error7 = Error(results7, p7, dt(7));
         
+        RelError2 = Error2 / max(abs(p2));
+        RelError3 = Error3 / max(abs(p3));
+        RelError4 = Error4 / max(abs(p4));
+        RelError5 = Error5 / max(abs(p5));
+        RelError6 = Error6 / max(abs(p6));
+        
         % The factor by which the error are reduced if step size is halved
         ErRedFact2 = Error2 / Error3;
         ErRedFact3 = Error3 / Error4;
@@ -70,14 +77,14 @@ p7 = y(t7);
         ErRedFact6 = Error6 / Error7;
         
         % Result table
-        column2 = [dt(2); Error2; ErRedFact2];
-        column3 = [dt(3); Error3; ErRedFact3];
-        column4 = [dt(4); Error4; ErRedFact4];
-        column5 = [dt(5); Error5; ErRedFact5];
-        column6 = [dt(6); Error6; ErRedFact6];
+        column2 = [dt(2); Error2; ErRedFact2; RelError2 < stabilityCriterion];
+        column3 = [dt(3); Error3; ErRedFact3; RelError3 < stabilityCriterion];
+        column4 = [dt(4); Error4; ErRedFact4; RelError4 < stabilityCriterion];
+        column5 = [dt(5); Error5; ErRedFact5; RelError5 < stabilityCriterion];
+        column6 = [dt(6); Error6; ErRedFact6; RelError6 < stabilityCriterion];
 
         fprintf('%s method', methodName)
-        table(column2, column3, column4, column5, column6, 'RowNames', {'dt'; 'error'; 'error red. factor'})
+        table(column2, column3, column4, column5, column6, 'RowNames', {'dt'; 'error'; 'error red. factor'; 'Stability'})
     end
 
     function processImplicitMethod(methodName, method)
@@ -110,7 +117,6 @@ p7 = y(t7);
 
 processExplicitMethod('Explicit Euler', @euler);
 processExplicitMethod('Heun', @heun);
-
 processImplicitMethod('Implicit Euler', @iEuler);
 processImplicitMethod('Adams-Moulton', @iAdams);
 processImplicitMethod('Adams-Moulton Lineriazation 1', @iAdams_lin1);
