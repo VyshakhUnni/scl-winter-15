@@ -1,7 +1,7 @@
 function main()
 
 % Initial values
-y = @analitical;
+y = @analytical;
 func = @equation;
 df = @derivative;
 y0 = 20;
