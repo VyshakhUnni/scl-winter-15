@@ -24,32 +24,40 @@ c_y = 1 / h_y^2;
 
 tic
 for k = 1 : K_max
+    rowNumber = 1;
+    columnNumber = 1;
+    
     for j = 1 : N
-        result(j) = b(j);
+        temp = b(j);
         
         % Check that point does not belong to vertical bounds
         % - lower bound
         if (j > N_x)
-            result(j) = result(j) - c_y * result(j - N_x);
+            temp = temp - c_y * result(j - N_x);
         end
         
         % - upper bound
         if (j + N_x <= N)
-            result(j) = result(j) - c_y * result(j + N_x);
+            temp = temp - c_y * result(j + N_x);
         end      
         
         % Check that point does not belong to horizontal bounds
         % - left bound
-        if (mod(j, N_x) ~= 1 && j > 1)
-            result(j) = result(j) - c_x * result(j - 1);
+        if (columnNumber ~= 1)
+            temp = temp - c_x * result(j - 1);
         end
         
         % - right bound
-        if (mod(j, N_x) ~= 0 && j < N)
-            result(j) = result(j) - c_x * result(j + 1);
+        if (columnNumber ~= N_x)
+            temp = temp - c_x * result(j + 1);
+        else
+            rowNumber = rowNumber + 1;
+            columnNumber = 0;
         end
         
-        result(j) = result(j) / c_self;
+        columnNumber = columnNumber + 1;
+        
+        result(j) = temp / c_self;
     end
     
     err = residual(b, result, N_x, N_y, c_self, c_x, c_y);
@@ -58,8 +66,9 @@ for k = 1 : K_max
         break;
     end
 end
+
 time = toc;
-storage = 5;
+storage = 5 + length(b);
 
 % Adding zero as the bounderies
 result = [

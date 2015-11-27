@@ -10,7 +10,7 @@ rowCell = eye(N_x) * (-2 * (1 / h_x^2 + 1 / h_y^2));
 % coefficients of horisontal neighbours
 xx_diag = ones(1, N_x - 1);
 D = diag(xx_diag, 1) * (1 / h_x^2) + diag(xx_diag, -1) * (1 / h_x^2);
-rowCell = rowCell + D
+rowCell = rowCell + D;
 
 % coefficients of vertical neighbours
 E_y = eye(N_x)  * (1 / h_y^2);

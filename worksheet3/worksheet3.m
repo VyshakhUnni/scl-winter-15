@@ -1,6 +1,6 @@
 function main()
 f = @equation;
-nodesNumbers = [7 15 31 63];
+nodesNumbers = [7 15 31 127];
 l = length(nodesNumbers);
 
 time_direct = zeros(1, l);
