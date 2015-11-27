@@ -1,45 +1,49 @@
 function main()
 f = @equation;
-exact = @analytical;
+nodesNumbers = [7 15 31 63];
+l = length(nodesNumbers);
 
-m = 131;
-N_x = m;
-N_y = m;
+time_direct = zeros(1, l);
+storage_direct = zeros(1, l);
 
-N = N_x * N_y;
+time_sparse = zeros(1, l);
+storage_sparse = zeros(1, l);
 
-h_x = 1 / (N_x + 1);
-h_y = 1 / (N_y + 1);
+time_seidel = zeros(1, l);
+storage_seidel = zeros(1, l);
 
-xx = zeros(N, 1);
-yy = zeros(N, 1);
-
-%TODO check this
-for i = 1 : N_y
-    xx(1 + (i - 1) * N_x : i * N_x) = h_x : h_x : 1 - h_x;
+for i = 1 : l
+    m = nodesNumbers(i);
+    N_x = m;
+    N_y = m;
+    
+    N = N_x * N_y;
+    
+    h_x = 1 / (N_x + 1);
+    h_y = 1 / (N_y + 1);
+    
+    xx = repmat(h_x : h_x : 1 - h_x, 1, N_y);
+    
+    %TODO and this
+    for j = 1 : N_y
+        yy(1 + (j - 1) * N_x : j * N_x) = ones(1, N_x) * j * h_y;
+    end
+    b = f(xx, yy).';
+    
+    A = makeMatrix(N_x, N_y);
+    [time_direct(i), storage_direct(i)] = direct(A, b);
+    [time_sparse(i), storage_sparse(i)] = direct_sparse(A, b);
 end
-xx.';
-%TODO and this
-for i = 1 : N_y
-    yy(1 + (i - 1) * N_x : i * N_x) = ones(1, N_x) * i * h_y; 
+
+printTable(nodesNumbers, time_direct, storage_direct);
+printTable(nodesNumbers, time_sparse, storage_sparse);
 end
-yy.';
-%A = makeMatrix(N_x, N_y);
-b = f(xx, yy);
 
-%result = vec2mat(linsolve(A, b), N_x);
+function printTable(numbers, time, storage)
+column1 = [numbers(1); time(1); storage(1)];
+column2 = [numbers(2); time(2); storage(2)];
+column3 = [numbers(3); time(3); storage(3)];
+column4 = [numbers(4); time(4); storage(4)];
 
-%resultSparse = vec2mat(A \ b, N_x);
-
-%surf(h_x:h_x:1-h_x, h_y:h_y:1-h_y, result);
-%surf(h_x:h_x:1-h_x, h_y:h_y:1-h_y, resultSparse);
-
-%shg
-
-result = seidel(b, N_x, N_y);
-surf(0:h_x:1, 0:h_y:1, result);
-shg;
-
-%ezsurfc(exact,[0,1,0,1],35)
-
+table(column1, column2, column3, column4, 'RowNames', {'N_x, N_y', 'time (s)', 'storage'})
 end

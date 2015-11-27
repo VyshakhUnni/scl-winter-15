@@ -1,5 +1,5 @@
-function result = residual(b, x, c_self, c_x, c_y)
-N = length(b);
+function result = residual(b, x, N_x, N_y, c_self, c_x, c_y)
+N = N_x * N_y;
 temp = zeros(N, 1);
 
 for j = 1 : N

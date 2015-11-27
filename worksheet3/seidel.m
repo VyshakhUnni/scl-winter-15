@@ -1,4 +1,4 @@
-function result = seidel(b, N_x, N_y)
+function [result, time, storage]  = seidel(b, N_x, N_y)
 tolerance = 1e-4;
 
 % number of inner points
@@ -22,6 +22,7 @@ c_self = -2 * (1 / h_x^2 + 1 / h_y^2);
 c_x = 1 / h_x^2;
 c_y = 1 / h_y^2;
 
+tic
 for k = 1 : K_max
     for j = 1 : N
         result(j) = b(j);
@@ -51,13 +52,14 @@ for k = 1 : K_max
         result(j) = result(j) / c_self;
     end
     
-    err = residual(b, result, c_self, c_x, c_y);
+    err = residual(b, result, N_x, N_y, c_self, c_x, c_y);
     
     if (err < tolerance)
         break;
     end
 end
-
+time = toc;
+storage = 5;
 % Adding zero as the bounderies
 result = [
     zeros(1, N_x + 2);
