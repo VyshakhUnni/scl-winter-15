@@ -5,14 +5,14 @@ h_x = 1 / (N_x + 1);
 h_y = 1 / (N_y + 1);
 
 % coefficients on the main diagonal
-rowCell = [ eye(N_x) * (-2 * (1 / h_x^2 + 1 / h_y^2)) ];
+rowCell = eye(N_x) * (-2 * (1 / h_x^2 + 1 / h_y^2));
 
-% coefficients of horisontal neibors
+% coefficients of horisontal neighbours
 xx_diag = ones(1, N_x - 1);
 D = diag(xx_diag, 1) * (1 / h_x^2) + diag(xx_diag, -1) * (1 / h_x^2);
 rowCell = rowCell + D;
 
-% coefficients of vertical neibors
+% coefficients of vertical neighbours
 E_y = eye(N_x)  * (1 / h_y^2);
 
 A = [ rowCell E_y zeros(N_x, N - 2 * N_x) ];
