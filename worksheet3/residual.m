@@ -21,12 +21,12 @@ for j = 1 : N
     
     % Check that point does not belong to horizontal bounds
     % - left bound
-    if (mod(j, N_x) ~= 1 && j > 1)
+    if (columnNumber ~= 1)
         temp = temp - c_x * x(j - 1);
     end
     
     % - right bound
-    if (mod(j, N_x) ~= 0 && j + 1 <= N)
+    if (columnNumber ~= N_x)
         temp = temp - c_x * x(j + 1);
     else
         rowNumber = rowNumber + 1;
