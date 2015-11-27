@@ -60,6 +60,7 @@ for k = 1 : K_max
 end
 time = toc;
 storage = 5;
+
 % Adding zero as the bounderies
 result = [
     zeros(1, N_x + 2);

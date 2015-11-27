@@ -14,6 +14,7 @@ storage_seidel = zeros(1, l);
 
 for i = 1 : l
     m = nodesNumbers(i);
+    
     N_x = m;
     N_y = m;
     
@@ -23,20 +24,19 @@ for i = 1 : l
     h_y = 1 / (N_y + 1);
     
     xx = repmat(h_x : h_x : 1 - h_x, 1, N_y);
-    
-    %TODO and this
-    for j = 1 : N_y
-        yy(1 + (j - 1) * N_x : j * N_x) = ones(1, N_x) * j * h_y;
-    end
+    yy = reshape(repmat(h_y : h_y : 1 - h_y, N_x, 1), 1, N);
     b = f(xx, yy).';
     
     A = makeMatrix(N_x, N_y);
+    
     [time_direct(i), storage_direct(i)] = direct(A, b);
     [time_sparse(i), storage_sparse(i)] = direct_sparse(A, b);
+    [result, time_seidel(i), storage_seidel(i)] = seidel(b, N_x, N_y);
 end
 
 printTable(nodesNumbers, time_direct, storage_direct);
 printTable(nodesNumbers, time_sparse, storage_sparse);
+printTable(nodesNumbers, time_seidel, storage_seidel);
 end
 
 function printTable(numbers, time, storage)
