@@ -32,6 +32,15 @@ for i = 1 : l
     [time_direct(i), storage_direct(i)] = direct(A, b);
     [time_sparse(i), storage_sparse(i)] = direct_sparse(A, b);
     [result, time_seidel(i), storage_seidel(i)] = seidel(b, N_x, N_y);
+    
+    %figure('Name', strcat('Surface Seidel ', num2str(m)));
+    %surf(0 : h_x: 1, 0 : h_y : 1, result);
+    %shg;
+    
+    %figure('Name', strcat('Contour Seidel ', num2str(m)));
+    %contour(0 : h_x: 1, 0 : h_y : 1, result);
+    %shg;
+    %error = sqrt(1 / N) * norm(f(xx, yy) - reshape(result(2:N_y+1,2:N_x+1), 1, N), 2)
 end
 
 printTable(nodesNumbers, time_direct, storage_direct);

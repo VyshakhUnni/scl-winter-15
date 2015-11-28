@@ -1,41 +1,16 @@
 function result = residual(b, x, N_x, N_y, c_self, c_x, c_y)
 N = N_x * N_y;
+N_xAll = N_x + 2;
 result = zeros(N, 1);
 
-rowNumber = 1;
-columnNumber = 1;
+innerIndex = 1;
 
-for j = 1 : N
-    temp = b(j) - c_self * x(j);
-    
-    % Check that point does not belong to vertical bounds
-    % - lower bound
-    if (j > N_x)
-        temp = temp - c_y * x(j - N_x);
+for j = 2 : N_y + 1
+    for i = 2 : N_x + 1
+        index = i + N_xAll * (j - 1);
+        result(innerIndex) = b(innerIndex) - dot([c_y c_x c_self c_x c_y], x([index-N_x-2 index - 1 index index+1 index+N_x + 2]));
+        innerIndex = innerIndex + 1;
     end
-    
-    % - upper bound
-    if (j + N_x <= N)
-        temp = temp - c_y * x(j + N_x);
-    end
-    
-    % Check that point does not belong to horizontal bounds
-    % - left bound
-    if (columnNumber ~= 1)
-        temp = temp - c_x * x(j - 1);
-    end
-    
-    % - right bound
-    if (columnNumber ~= N_x)
-        temp = temp - c_x * x(j + 1);
-    else
-        rowNumber = rowNumber + 1;
-        columnNumber = 0;
-    end
-    
-    columnNumber = columnNumber + 1;
-    
-    result(j) = temp;
 end
 
 result = sqrt(1 / N) * norm(result, 2);
