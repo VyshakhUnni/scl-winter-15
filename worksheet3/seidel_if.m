@@ -12,7 +12,7 @@ tolerance = 1e-4;
 N = N_x * N_y;
 
 % Maximal number of iterations
-K_max = 10000;
+K_max = 100000;
 
 % Steps
 h_x = 1 / (N_x + 1);

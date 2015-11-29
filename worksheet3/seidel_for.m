@@ -12,8 +12,8 @@ tolerance = 1e-4;
 N = N_x * N_y;
 
 % Maximal number of iterations
-K_max = 10000;
-count = 0;
+K_max = 100000;
+
 % Steps
 h_x = 1 / (N_x + 1);
 h_y = 1 / (N_y + 1);
@@ -93,13 +93,12 @@ for k = 1 : K_max
         - c_y * result(N - N_x)) / c_self;
     
     accuracy = residual_for(b, result, N_x, N_y, c_self, c_x, c_y);
-    count = count + 1;
     
     if (accuracy < tolerance) 
         break;
     end
 end
-count
+
  % Adding zero as the bounderies
  result = [
      zeros(1, N_x + 2);

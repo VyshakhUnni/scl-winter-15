@@ -39,18 +39,7 @@ err = zeros(1, l + 1);
 
 for i = 1 : l
     m = nodesNumbers(i);
-    
-    N_x = m;
-    N_y = m;
-    
-    N = N_x * N_y;
-    
-    h_x = 1 / (N_x + 1);
-    h_y = 1 / (N_y + 1);
-    
-    xx = repmat(h_x : h_x : 1 - h_x, 1, N_y);
-    yy = reshape(repmat(h_y : h_y : 1 - h_y, N_x, 1), 1, N);
-    b = f(xx, yy).';
+    [N_x, N_y, N, h_x, h_y, xx, yy, b] = setVariables(m, f); 
     
     A = makeMatrix(N_x, N_y);
     
@@ -65,16 +54,35 @@ for i = 1 : l
     figure('Name', strcat('Contour Seidel ', num2str(m)));
     contour(0 : h_x: 1, 0 : h_y : 1, result);
     shg;
-    err(i) = sqrt(1 / N) * norm(T(xx, yy) - reshape(result(2:N_y+1,2:N_x+1), 1, N), 2);
+    
+    err(i) = sqrt(1 / N) * norm(T(xx, yy) - reshape(result(2 : N_y + 1, 2 : N_x + 1), 1, N), 2);
 end
 
+fprintf('Direct solver')
 printTimeStorageTable(nodesNumbers, time_direct, storage_direct);
+
+fprintf('Direct solver with sparse matrix')
 printTimeStorageTable(nodesNumbers, time_sparse, storage_sparse);
+
+fprintf('Gauss Seidel solver')
 printTimeStorageTable(nodesNumbers, time_seidel, storage_seidel);
 
 % 127 nodes
-m = nodesNumbers(i);
+[N_x, N_y, N, h_x, h_y, xx, yy, b] = setVariables(127, f);
+result = seidel_for(b, N_x, N_y);
+err(l + 1) = sqrt(1 / N) * norm(T(xx, yy) - reshape(result(2 : N_y + 1, 2 : N_x + 1), 1, N), 2);
 
+column1 = [nodesNumbers(1); err(1); 0];
+column2 = [nodesNumbers(2); err(2); err(1) / err(2)];
+column3 = [nodesNumbers(3); err(3); err(2) / err(3)];
+column4 = [nodesNumbers(4); err(4); err(3) / err(4)];
+column5 = [127; err(5); err(4) / err(5)];
+
+fprintf('Errors of Gauss Seidel method')
+table(column1, column2, column3, column4, column5, 'RowNames', {'N_x, N_y', 'error', 'error red.'})
+end
+
+function [N_x, N_y, N, h_x, h_y, xx, yy, b] = setVariables(m, f)
 N_x = m;
 N_y = m;
 
@@ -86,16 +94,6 @@ h_y = 1 / (N_y + 1);
 xx = repmat(h_x : h_x : 1 - h_x, 1, N_y);
 yy = reshape(repmat(h_y : h_y : 1 - h_y, N_x, 1), 1, N);
 b = f(xx, yy).';
-result = seidel_for(b, N_x, N_y);
-err(l + 1) = sqrt(1 / N) * norm(T(xx, yy) - reshape(result(2:N_y+1,2:N_x+1), 1, N), 2);
-
-column1 = [nodesNumbers(1); err(1); 0];
-column2 = [nodesNumbers(2); err(2); err(1) / err(2)];
-column3 = [nodesNumbers(3); err(3); err(2) / err(3)];
-column4 = [nodesNumbers(4); err(4); err(3) / err(4)];
-column5 = [127; err(5); err(4) / err(5)];
-
-table(column1, column2, column3, column4, column5, 'RowNames', {'N_x, N_y', 'error', 'error red.'})
 end
 
 function printTimeStorageTable(numbers, time, storage)
