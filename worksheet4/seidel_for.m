@@ -1,4 +1,4 @@
-function [result, time, storage]  = seidel_for(previous, N_x, N_y, dt)
+function result  = seidel_for(previous, N_x, N_y, dt)
 tolerance = 1e-6;
 
 % number of inner points
@@ -18,7 +18,7 @@ result = zeros(1, N);
 % c_self - self coefficient
 % c_x - coefficient of horizontal neighbours
 % c_y - coefficient of vertical neighbours
-c_self = -2 * (1 / h_x^2 + 1 / h_y^2) * dt - 1;
+c_self = 1 + 2 * (1 / h_x^2 + 1 / h_y^2) * dt;
 c_x = dt / h_x^2;
 c_y = dt / h_y^2;
 
