@@ -5,7 +5,7 @@ tolerance = 1e-6;
 N = N_x * N_y;
 
 % Maximal number of iterations
-K_max = 100000;
+K_max = 1000;
 
 % Steps
 h_x = 1 / (N_x + 1);
@@ -23,8 +23,6 @@ c_x = dt / h_x^2;
 c_y = dt / h_y^2;
 
 for k = 1 : K_max
-    old = result;
-    
     % First inner row
     % - left boundary 
     result(1) = (previous(1) ...
@@ -86,7 +84,7 @@ for k = 1 : K_max
         + c_x * result(N - 1) ...
         + c_y * result(N - N_x)) / c_self;
     
-    accuracy = norm(old - result, 2);%residual_for(previous, result, N_x, N_y, c_self, c_x, c_y);
+    accuracy = residual_for(previous, result, N_x, N_y, c_self, c_x, c_y);
     
     if (accuracy < tolerance) 
         break;

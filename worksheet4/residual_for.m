@@ -26,8 +26,8 @@ for j = 2 : N_y - 1
     index = 1 + N_x * (j - 1);
 
     result(index) = b(index) - (c_self * x(index) ...
-        + c_x * x(index + 1) + ...
-        + c_y * x(index - N_x) + c_y * x(index + N_x));
+        - c_x * x(index + 1) ...
+        - c_y * x(index - N_x) + c_y * x(index + N_x));
     
     % - middle
     for i = 2 : N_x - 1

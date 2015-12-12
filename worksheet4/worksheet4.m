@@ -5,30 +5,15 @@ nodes_numbers = [ 3 7 15 31 ];
 
 t_end = 1;
 
-% m = 7;
-% dt = 1/512;
-% 
-% [N_x, N_y, N, h_x, h_y] = setVariables(m);
-% temperature_0 = ones(1, N);
-% 
-% result = iEuler(temperature_0, dt,t_end,N_x, N_y);
-% result1 = [
-%     zeros(1, N_x + 2);
-%     zeros(N_y, 1), vec2mat(result(:, 1/8 / dt), N_x), zeros(N_y, 1);
-%     zeros(1, N_x + 2)
-%     ];
-% 
-% surf(0 : h_x: 1, 0 : h_y : 1, result1);
-% shg;
-
 for t = t_list
     k = 1;
     figure('Name', strcat('Explicit Euler t=', num2str(t)));
     for m = nodes_numbers
         [N_x, N_y, N, h_x, h_y] = setVariables(m);
         temperature_0 = ones(1, N);
+        A = sparse(makeMatrix(N_x, N_y));
         for dt = dt_list
-            result = euler(@euler_equation, temperature_0, dt, t_end, N_x, N_y);
+            result = eEuler(@euler_equation, temperature_0, dt, t_end, N_x, N_y);
             
             result1 = [
                 zeros(1, N_x + 2);
@@ -43,15 +28,16 @@ for t = t_list
     end
     shg;
 end
-figure('Name', strcat('Implicit Euler t=', num2str(t)));
+
+figure('Name', 'Implicit Euler');
 k = 1;
+dt = 1/64;
+
 for t = t_list
     for m = nodes_numbers
         [N_x, N_y, N, h_x, h_y] = setVariables(m);
         temperature_0 = ones(1, N);
-        
-        dt = 1/64;
-        
+
         result = iEuler(temperature_0, dt, t_end, N_x, N_y);
         
         result1 = [
