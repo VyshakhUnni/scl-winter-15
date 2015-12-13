@@ -11,7 +11,7 @@ for t = t_list
     for m = nodes_numbers
         [N_x, N_y, N, h_x, h_y] = setVariables(m);
         temperature_0 = ones(1, N);
-        A = sparse(makeMatrix(N_x, N_y));
+        
         for dt = dt_list
             result = eEuler(@euler_equation, temperature_0, dt, t_end, N_x, N_y);
             
